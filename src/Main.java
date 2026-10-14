@@ -36,11 +36,38 @@ public class Main {
                 tokenSequence = getNextSequence(myScanner);
                 if (tokenSequence != null) {
                     // Replace the code starting here with code to evaluate the expression
-                    System.out.print("Read equation: ");
-                    for (Token tok : tokenSequence) {
-                        System.out.print(tok.getTokenString() + " ");
+                    System.out.print("Result: ");
+                    Stack<Integer> valStack = new Stack<>();
+                    for(int i = tokenSequence.size() - 1; i >= 0; i--) {
+                        Token tok = tokenSequence.get(i);
+                        String value = tok.getTokenString();
+
+                        if(value.matches("\\d+")){
+                            valStack.push(Integer.parseInt(value));
+                        }
+                        else if (value.equals("*")) {
+                            int right = valStack.pop();
+                            int left = valStack.pop();
+                            valStack.push(left * right);
+                        }
+                        else if (value.equals("+")) {
+                            int right = valStack.pop();
+                            int left = valStack.pop();
+                            valStack.push(left + right);
+                        }
+                        else if  (value.equals("/")) {
+                            int right = valStack.pop();
+                            int left = valStack.pop();
+                            valStack.push(left / right);
+                        }
+                        else if (value.equals("-")) {
+                            int right = valStack.pop();
+                            int left = valStack.pop();
+                            valStack.push(left - right);
+                        }
                     }
-                    System.out.println();
+                    int result = valStack.pop();
+                    System.out.println(result);
                     // End where to replace
                 }
             } while (tokenSequence != null);
